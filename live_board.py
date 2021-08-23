@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-"""Show the live position from the board using curses. Print the pgn on exit."""
+"""Show the live position from the board and print the pgn on exit."""
 
 #  LiBoard
 #  Copyright (C) 2021 Philipp Leclercq
@@ -17,18 +17,21 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import argparse
 import curses
+import datetime
 import sys
+
 import chess
 import chess.pgn
-import datetime
+import liboard
 from liboard import LiBoard
 
 global game, node
 
 
-def main(stdscreen: curses.window):
-    board = LiBoard()
+def main(stdscreen: curses.window, args: argparse.Namespace):
+    board = LiBoard(args.port, args.baud_rate, args.move_delay)
     global game, node
     game = chess.pgn.Game()
     game.headers['Date'] = datetime.datetime.now().strftime('%Y.%m.%d')
@@ -73,10 +76,14 @@ def main(stdscreen: curses.window):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__, parents=[liboard.ARGUMENT_PARSER])
+    parser.add_argument('-o', '--output-file', default='', help='Optional file to write the pgn to')
+    args = parser.parse_args()
+
     exit_code = 0
     # noinspection PyBroadException
     try:
-        curses.wrapper(main)
+        curses.wrapper(main, args)
     except KeyboardInterrupt:
         pass
     except Exception as e:
@@ -84,4 +91,7 @@ if __name__ == '__main__':
         exit_code = 1
     finally:
         print(game)
+        if args.output_file:
+            with open(args.output_file, 'a') as of:
+                of.write(str(game))
         sys.exit(exit_code)
