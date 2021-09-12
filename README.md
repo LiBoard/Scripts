@@ -1,23 +1,17 @@
-# LiBoard - Scripts
+# Scripts
+Scripts to use LiBoard on PC.
+Run the scripts with the `--help` option to see information about their arguments.
 
-Scripts for [LiBoard](https://github.com/LiBoard/LiBoard).
+## keyboard.py
 
-## Contents
+Emulates keyboard inputs for the moves by one side. Can be used to play on Lichess.
+Depends on [pyautogui](https://pypi.org/project/pyautogui/).
 
-### keyboard.py
+## live_board.py
 
-Emulates keyboard inputs for the moves by one side. Can be used to play on Lichess. Uses (and depends
-on) [pyautogui](https://pypi.org/project/pyautogui/).
+Shows the current board position using curses and prints a PGN on exit.
 
-Usage:  
-For white: `python3 client_keyboard.py`  
-For black: `python3 client_keyboard.py black`
-
-### live_board.py
-
-Shows the current board position using curses. Prints a PGN on exit.
-
-### binboard.py
+## binboard.py
 
 Print the binary data from the board as it comes in. Intended for diagnostic purposes.
 
